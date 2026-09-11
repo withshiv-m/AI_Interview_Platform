@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+ps03.db
+uploads/resumes/*
+uploads/jobs/*
+!uploads/resumes/.gitkeep
+!uploads/jobs/.gitkeep
