@@ -1,179 +1,676 @@
-#  Tech Pluse
+# PS03 — Multi-Agent Resume Screening & Job Matching Platform
 
-> A full-stack technology solution developed for **KH096 Tech Pulse** to solve a real-world problem using modern web technologies.
+> An AI-powered multi-agent platform that automates resume screening, compares candidates against job requirements, identifies skill gaps, and provides recruiter-friendly recommendations.
 
-##  About The Project
+## About The Project
 
-**Tech Pulse** is a full-stack web application designed to provide a practical, scalable, and user-friendly solution for the given hackathon problem statement.
+**PS03 — Multi-Agent Resume Screening & Job Matching Platform** is a full-stack hackathon solution designed to make the recruitment screening process faster, more consistent, and easier for recruiters.
 
-The project consists of two major parts:
+The system accepts a job description and multiple candidate resumes, extracts structured information using AI agents, calculates an explainable deterministic match score, identifies skill gaps, and generates recruiter-friendly candidate summaries.
 
-*  **Frontend** – User interface and client-side functionality
-*  **Backend** – Server-side logic and API handling
+The application is divided into two major parts:
 
-The application follows a modular architecture so that the frontend and backend can communicate efficiently through APIs.
+* **Frontend** — Interactive recruiter interface
+* **Backend** — FastAPI APIs, AI agents, document processing, scoring, and database management
+
+The frontend communicates with the backend through REST APIs.
 
 ---
 
-##  Problem Statement
+# Problem Statement
 
-Modern users often face challenges in accessing, managing, and interacting with technology-driven services efficiently.
+Recruiters often need to screen a large number of resumes for a single job opening.
 
-**Tech Pulse** aims to address this challenge by providing a centralized digital platform with an intuitive interface and a scalable backend.
+Manual screening can be:
+
+* Time-consuming
+* Repetitive
+* Difficult to scale
+* Inconsistent across candidates
+* Challenging when comparing skills and experience
+* Difficult when identifying skill gaps
+
+A recruiter may have to manually compare job requirements with information spread across many resumes.
 
 ### Our Goal
 
-To build a solution that is:
+To build an intelligent screening platform that can:
 
-*  Easy to use
-*  Fast and responsive
-*  Secure
-*  User-friendly
-*  Scalable
-*  Ready for future AI/automation integration
+* Process multiple resumes
+* Extract candidate information automatically
+* Understand job requirements
+* Compare candidates against a selected job
+* Calculate an explainable match score
+* Identify matched, missing, and weak skills
+* Generate recruiter-friendly recommendations
+* Provide ranked candidates through an API
 
 ---
 
-##  Solution
+# Solution
 
-Tech Pulse provides a web-based platform where users can interact with the system through a simple and responsive interface.
+Our solution uses a **multi-agent AI workflow** combined with deterministic Python-based scoring.
 
-The system separates the presentation layer from the backend logic, making the application easier to maintain, test, and scale.
+The system separates AI-based analysis from numerical scoring so that the final match score remains consistent and explainable.
 
-###  Application Flow
+### Application Flow
 
 ```text
-                ┌──────────────────┐
-                │      User        │
-                └────────┬─────────┘
-                         │
-                         ▼
-                ┌──────────────────┐
-                │    Frontend      │
-                │  Web Interface   │
-                └────────┬─────────┘
-                         │
-                    API Requests
-                         │
-                         ▼
-                ┌──────────────────┐
-                │     Backend      │
-                │ Business Logic   │
-                └────────┬─────────┘
-                         │
-                         ▼
-                ┌──────────────────┐
-                │ Data / Services  │
-                └──────────────────┘
+Recruiter
+    │
+    ├── Job Description
+    │       ↓
+    │   Job Agent
+    │
+    └── Resume Upload
+            ↓
+        Resume Parser
+            ↓
+        Resume Agent
+            │
+            ▼
+       Candidate + Job
+            │
+            ▼
+       Matching Agent
+            │
+            ▼
+   Deterministic Scoring
+            │
+            ▼
+     Skill Gap Agent
+            │
+            ▼
+     Recruiter Agent
+            │
+            ▼
+    Ranked Candidates
+            │
+            ▼
+     Recruiter Review
 ```
 
 ---
 
-##  Key Features
+# AI Multi-Agent System
 
-*  Modern and user-friendly interface
-*  Responsive web design
-*  Separate frontend and backend architecture
-*  API-based communication
-*  Fast application workflow
-*  Modular project structure
-*  Backend-controlled application logic
-*  Scalable architecture for future improvements
+The platform uses five specialized AI agents.
+
+### 1. Job Agent
+
+Extracts structured requirements from a job description.
+
+It identifies:
+
+* Required skills
+* Preferred skills
+* Minimum experience
+* Education requirements
+* Other requirements
+
+### 2. Resume Agent
+
+Processes extracted resume text and creates a structured candidate profile.
+
+It extracts:
+
+* Name
+* Email
+* Phone
+* Education
+* Experience
+* Skills
+* Projects
+* Certifications
+* Relevant experience
+
+### 3. Matching Agent
+
+Compares the candidate profile with the selected job profile.
+
+It produces observations about:
+
+* Skill compatibility
+* Experience compatibility
+* Education compatibility
+* Overall candidate-job fit
+
+The agent does **not** directly control the final numerical score.
+
+### 4. Skill Gap Agent
+
+Identifies:
+
+* Matched skills
+* Missing skills
+* Weak skills
+* Improvement areas
+
+### 5. Recruiter Agent
+
+Converts the analysis into a recruiter-friendly result containing:
+
+* Strengths
+* Concerns
+* Recommendation
+* Explanation
+* Recruiter summary
 
 ---
 
-##  Project Architecture
+# Deterministic Matching Score
 
-The repository is divided into two main modules:
+The final numerical score is calculated in Python and is independent of the LLM.
+
+| Factor     | Weight |
+| ---------- | -----: |
+| Skills     |    50% |
+| Experience |    25% |
+| Education  |    15% |
+| Other Fit  |    10% |
+
+This separation makes the scoring process more deterministic and explainable.
 
 ```text
-KH096-Tech_pluse/
-│
-├── frontend/
-│   ├── ...
-│   └── ...
-│
-├── backend/
-│   ├── ...
-│   └── ...
-│
-├── README.md
-└── ...
+Final Score
+     │
+     ├── Skills       → 50%
+     ├── Experience   → 25%
+     ├── Education    → 15%
+     └── Other Fit    → 10%
 ```
 
-### Frontend
-
-The `frontend` directory contains:
-
-* User interface
-* Pages/components
-* Client-side logic
-* API integration
-* Styling and responsive design
-
-### Backend
-
-The `backend` directory contains:
-
-* Server-side logic
-* API endpoints
-* Data processing
-* Business logic
-* Backend services
+The LLM agents provide qualitative analysis and explanations, while Python calculates the final numerical score.
 
 ---
 
-##  Tech Stack
+# Technical Architecture
 
-### Frontend
+```text
+                    ┌─────────────────┐
+                    │    Recruiter    │
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │ React / Next.js │
+                    │    Frontend     │
+                    └────────┬────────┘
+                             │ REST API
+                             ▼
+                    ┌─────────────────┐
+                    │     FastAPI     │
+                    │     Backend     │
+                    └────────┬────────┘
+                             │
+             ┌───────────────┼────────────────┐
+             │               │                │
+             ▼               ▼                ▼
+        Job Routes      Resume Routes    Matching Routes
+             │               │                │
+             └───────────────┼────────────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │   Orchestrator  │
+                    └────────┬────────┘
+                             │
+             ┌───────────────┼────────────────┐
+             ▼               ▼                ▼
+        AI Agents       Services          Scoring
+             │               │                │
+             └───────────────┼────────────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │ SQLite Database │
+                    └─────────────────┘
+```
 
+---
+
+# Technology Stack
+
+## Frontend
+
+* React / Next.js
 * HTML
 * CSS
 * JavaScript
-* Modern frontend development practices
+* REST API integration
 
-### Backend
+## Backend
 
-* Backend API framework
-* Server-side programming
-* REST API architecture
+* Python 3.11+
+* FastAPI
+* Uvicorn
+* Pydantic
+* SQLAlchemy
+* SQLite
+* python-multipart
 
-### Development Tools
+## AI & Document Processing
+
+* LLM API
+* Structured JSON responses
+* PDF parsing
+* DOCX parsing
+* python-docx
+* pypdf
+
+## Development Tools
 
 * Git
 * GitHub
 * VS Code
 * REST APIs
-
-> **Note:** The exact technologies and dependencies should be updated here according to the final implementation in the repository.
+* FastAPI Swagger UI
 
 ---
 
-#  Installation & Setup
+# Project Structure
 
-## 1️ Clone the Repository
+```text
+KH096-Tech_pluse/
+│
+├── frontend/
+│
+├── backend/
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── README.md
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── seed.py
+│   │
+│   ├── routes/
+│   │   ├── jobs.py
+│   │   ├── resumes.py
+│   │   ├── candidates.py
+│   │   └── matching.py
+│   │
+│   ├── services/
+│   │   ├── parser.py
+│   │   ├── llm_service.py
+│   │   ├── scoring.py
+│   │   └── storage.py
+│   │
+│   ├── agents/
+│   │   ├── orchestrator.py
+│   │   ├── job_agent.py
+│   │   ├── resume_agent.py
+│   │   ├── matching_agent.py
+│   │   ├── skill_gap_agent.py
+│   │   └── recruiter_agent.py
+│   │
+│   ├── tests/
+│   │   ├── test_backend.py
+│   │   └── test_acceptance.py
+│   │
+│   └── uploads/
+│       ├── resumes/
+│       └── jobs/
+│
+└── README.md
+```
+
+---
+
+# Backend Setup
+
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/withshiv-m/KH096-Tech_pluse.git
+cd KH096-Tech_pluse
 ```
 
-Navigate into the project:
+## 2. Open Backend
 
 ```bash
-cd KH096-Tech_pluse
+cd backend
+```
+
+## 3. Create Virtual Environment
+
+### Windows
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+## 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
 
-#  Frontend Setup
+# Environment Variables
 
-Open the frontend directory:
+Create a `.env` file inside the `backend` directory.
 
-```bash
-cd frontend
+Use `.env.example` as the template.
+
+```env
+LLM_API_KEY=your_api_key_here
+LLM_MODEL=your_model_here
+LLM_API_URL=https://api.openai.com/v1/chat/completions
+LLM_TIMEOUT_SECONDS=30
+
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001
 ```
 
-Install the required dependencies if applicable:
+**Never commit `.env` or real API keys to GitHub.**
+
+---
+
+# Database
+
+The project uses **SQLite** with SQLAlchemy ORM.
+
+The database is automatically initialized when the FastAPI application starts.
+
+```text
+backend/ps03.db
+```
+
+No manual database creation is required.
+
+The database contains:
+
+* Jobs
+* Candidates
+* Matches
+* Analyses
+
+---
+
+# Run the Backend
+
+From the `backend` directory:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will run at:
+
+```text
+http://localhost:8000
+```
+
+FastAPI documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+ReDoc:
+
+```text
+http://localhost:8000/redoc
+```
+
+---
+
+# API Endpoints
+
+| Method | Endpoint                         | Purpose                                    |
+| ------ | -------------------------------- | ------------------------------------------ |
+| GET    | `/api/health`                    | Check API and database health              |
+| POST   | `/api/jobs`                      | Create and analyze a job                   |
+| GET    | `/api/jobs`                      | Get all jobs                               |
+| GET    | `/api/jobs/{job_id}`             | Get a specific job                         |
+| DELETE | `/api/jobs/{job_id}`             | Delete a job and related records           |
+| POST   | `/api/resumes/upload`            | Upload multiple PDF/DOCX resumes           |
+| GET    | `/api/candidates`                | Get all candidates                         |
+| GET    | `/api/candidates/{candidate_id}` | Get candidate details                      |
+| DELETE | `/api/candidates/{candidate_id}` | Delete candidate and related records       |
+| POST   | `/api/matching/run/{job_id}`     | Run screening and return ranked candidates |
+
+---
+
+# Example API Workflow
+
+### Step 1 — Create a Job
+
+```bash
+curl -X POST http://localhost:8000/api/jobs \
+-H "Content-Type: application/json" \
+-d "{\"title\":\"Python Backend Developer\",\"description\":\"Looking for a Python developer with FastAPI, SQL and Docker experience.\"}"
+```
+
+### Step 2 — Upload Resumes
+
+```bash
+curl -X POST http://localhost:8000/api/resumes/upload \
+-F "files=@resume1.pdf" \
+-F "files=@resume2.docx"
+```
+
+Multiple resumes can be uploaded in one request.
+
+### Step 3 — Run Matching
+
+```bash
+curl -X POST http://localhost:8000/api/matching/run/1
+```
+
+The API returns ranked candidates with:
+
+* Match score
+* Skill score
+* Experience score
+* Education score
+* Other fit score
+* Matched skills
+* Missing skills
+* Weak skills
+* Strengths
+* Concerns
+* Recommendation
+* Explanation
+* Recruiter summary
+
+---
+
+# Seed Demo Data
+
+The project includes synthetic demo data for testing the complete workflow.
+
+Run:
+
+```bash
+python seed.py
+```
+
+This generates:
+
+* 3 sample jobs
+* 10 synthetic candidates
+
+Then start the backend:
+
+```bash
+uvicorn main:app --reload
+```
+
+Run matching for a job:
+
+```bash
+curl -X POST http://localhost:8000/api/matching/run/1
+```
+
+---
+
+# Testing
+
+Run the test suite:
+
+```bash
+pytest -q
+```
+
+Tests cover:
+
+* Database initialization
+* API health
+* Job creation
+* Resume upload
+* Candidate creation
+* PDF/DOCX parsing
+* Deterministic score calculation
+* Matching workflow
+* Skill-gap analysis
+* Error handling
+* Acceptance workflow
+
+The complete MVP workflow can be tested using synthetic data.
+
+---
+
+# Frontend Connection
+
+The frontend communicates with the FastAPI backend through REST APIs.
+
+For local development:
+
+```text
+Frontend
+http://localhost:3000
+
+        ↓ REST API
+
+Backend
+http://localhost:8000
+```
+
+Example JavaScript request:
+
+```javascript
+const response = await fetch(
+  "http://localhost:8000/api/jobs"
+);
+
+const result = await response.json();
+console.log(result);
+```
+
+The backend uses a consistent response structure:
+
+### Success
+
+```json
+{
+  "success": true,
+  "data": {},
+  "message": "Request completed successfully"
+}
+```
+
+### Error
+
+```json
+{
+  "success": false,
+  "data": null,
+  "message": "Request failed",
+  "error": "ERROR_CODE"
+}
+```
+
+---
+
+# Complete Screening Workflow
+
+```text
+Recruiter
+    ↓
+Create Job
+    ↓
+Job Agent
+    ↓
+Extract Job Requirements
+    ↓
+Upload Resumes
+    ↓
+PDF/DOCX Parser
+    ↓
+Resume Agent
+    ↓
+Create Candidate Profiles
+    ↓
+Matching Agent
+    ↓
+Deterministic Scoring
+    ↓
+Skill Gap Agent
+    ↓
+Recruiter Agent
+    ↓
+Save Matches & Analysis
+    ↓
+Rank Candidates
+    ↓
+Recruiter Review
+```
+
+---
+
+# Security
+
+The backend implements basic MVP security practices:
+
+* API keys stored in environment variables
+* `.env` excluded from Git
+* Uploaded file type validation
+* File size limits
+* Filename sanitization
+* Malformed document handling
+* Pydantic request validation
+* Uploaded files are not executed
+
+---
+
+# Current Limitations
+
+This is a hackathon MVP.
+
+* SQLite is intended for local/MVP usage rather than high-concurrency production workloads.
+* Scanned image-only PDFs require OCR for reliable extraction.
+* The local fallback extraction is heuristic and less capable than an LLM.
+* Authentication and authorization are outside the current MVP scope.
+
+---
+
+# Team
+
+**Project:** PS03 — Multi-Agent Resume Screening & Job Matching Platform
+
+**Hackathon:** Kurukshetra 2.0 — Hackfest 2026
+
+**Problem ID:** PS03
+
+**Team:** KH096 Tech Pluse
+
+**GitHub:**
+https://github.com/withshiv-m/KH096-Tech_pluse
+
+---
+
+# License
+
+This project was developed as a hackathon prototype.
 
 ```bash
 npm install
@@ -344,52 +841,46 @@ Before deployment, test:
 
 ### Tech Pulse Team
 
-| Member           | Role      |
-| ---------------- | --------- |
-| Shivprasad Mugle | Developer |
-| Aryan Bhosale    | Developer |
-| Siddesh Tavhare  | Developer |
-| Sarthak Tekale   | Developer |
+| Member           | Role                |
+| ---------------- | ------------------- |
+| Shivprasad Mugle | frontend Developer  |
+| Aryan Bhosale    | Backend Developer   |
+| Siddesh Tavhare  | Database manager    |
+| Sarthak Tekale   | presentation expert |
 
 > Update the team members and their roles according to your actual team.
 
 ---
 
-# 🌟 Why Tech Pulse?
+#🌟 Why Tech Pulse?
 
 Tech Pulse focuses on combining:
 
 ```text
-💡 Innovation
+ Innovation
       +
-🖥️ Modern Web Development
+ Modern Web Development
       +
-⚙️ Scalable Backend
+ Scalable Backend
       +
-🤖 Future AI Integration
+ Future AI Integration
       =
-🚀 Practical Technology Solution
+ Practical Technology Solution
 ```
 
 The project is designed with scalability and real-world usability in mind.
 
 ---
 
-# 📄 License
+#  License
 
 This project is developed for educational, hackathon, and demonstration purposes.
 
 ---
 
-# ⭐ Support
-
-If you find this project useful, consider giving the repository a ⭐ on GitHub.
-
 **Repository:**
 https://github.com/withshiv-m/KH096-Tech_pluse
 
----
 
-## 🚀 Built With Passion
 
-**Tech Pulse — Turning Ideas into Technology.**
+
