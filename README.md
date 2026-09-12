@@ -1,4 +1,4 @@
-#  Tech Pulse
+#  Tech Pluse
 
 > A full-stack technology solution developed for **KH096 Tech Pulse** to solve a real-world problem using modern web technologies.
 
